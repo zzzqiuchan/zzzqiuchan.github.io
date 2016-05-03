@@ -1,0 +1,124 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.15" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> KLEE生成的文件 &middot; May the starlight be with you </title>
+
+  
+  <link rel="stylesheet" href="http://zzzqiuchan.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://zzzqiuchan.github.io/css/syntax.css">
+  <link rel="stylesheet" href="http://zzzqiuchan.github.io/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.useso.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+</head>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+<script>hljs.initHighlightingOnLoad();</script>
+	<body class="theme-base-0d layout-reverse">
+		
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="http://zzzqiuchan.github.io/"><h1>星空</h1></a>
+      <p class="lead">
+       描述什么的从来没有存在过呀！ 
+      </p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li><a href="http://zzzqiuchan.github.io//">Home</a> </li>
+      <li><a href="http://zzzqiuchan.github.io//categories/">Categories</a> </li>
+      <li><a href="http://zzzqiuchan.github.io//tags/">Tags</a> </li>
+    </ul>
+
+    <p>
+      &copy; 2016. All rights reserved. 
+      <br>Powered by <a href="http://gohugo.io/">Hugo</a>. <a href="https://golang.org/">#Golang</a>.
+    </p>
+    
+      <p>
+        <a href="https://github.com/zzzqiuchan" target="_blank">
+        <i class="fa fa-github-square fa-fw"></i>GitHub</a>
+      </p>
+    
+  </div>
+</div>
+
+
+		<div class="content container">
+			<div class="post">
+			 	<h1>KLEE生成的文件</h1>
+			  <span class="post-date">Sun, May 1, 2016</span>
+			      <p>原文 <a href="http://klee.github.io/docs/files/">http://klee.github.io/docs/files/</a><br />
+* <a href="#1">基础全局文件</a><br />
+* <a href="#2">其他全局文件（需要命令来指定生成）</a><br />
+* <a href="#3">每条路径的文件</a></p>
+
+<p><h1 id="1">基础全局文件</h1>
+<table class="table table-bordered table-striped table-condensed">
+<tr><th>文件名</th><th>描述</th></tr>
+<tr><td>info</td><td>记录klee运行的各种相关信息，如使用的命令，运行时间等</td></tr>
+<tr><td>warnings.txt</td><td>KLEE运行过程中生成的warning信息</td></tr>
+<tr><td>messages.txt</td><td>KLEE运行过程中生成的其他messages</td></tr>
+<tr><td>assembly.ll</td><td>将KLEE实际执行的LLVM bitcode转为可读的文本后的文件</td></tr>
+<tr><td>run.stats</td><td>KLEE生成的各种统计信息。能够人工查看，或使用<a href="http://klee.github.io/docs/tools/">klee-stats</a>查看</td></tr>
+<tr><td>run.istats</td><td>KLEE生成的程序中每一行代码的全局统计信息global statistics</td></tr>
+</table></p>
+
+<p><h1 id="2">其他全局文件（需要命令来指定生成）</h1>
+<table class="table table-bordered table-striped table-condensed">
+<tr><th>文件名</th><th>描述</th></tr>
+<tr><td>all-queries.pc</td><td>文件中以<a href="http://klee.github.io/docs/kquery">KQuery</a>格式记录了KLEE在运行中产生的所有queries。<br>记录的queries没有经过任何优化（caching, constraint independence等），也就是说，其中有些queries从来没有被KLEE的求解器执行过，或者在执行前被修改了<br>需要的命令参数为 <code>--use-query-log=all:pc</code></td></tr>
+<tr><td>all-queries.smt2</td><td>文件中以<a href="http://www.smtlib.org/">SMT-LIBv2</a>格式记录了KLEE在运行中产生的所有queries。<br>记录的内容与all-queries.pc含有相同的信息<br>需要的命令参数为 <code>--use-query-log=all:smt2</code></td></tr>
+<tr><td>solver-queries.pc</td><td>文件中以<a href="http://klee.github.io/docs/kquery">KQuery</a>格式记录了运行过程中实际传给KLEE的underlying solver的所有queries。<br>记录的queries经过了所有的优化（caching, constraint independence等）<br>需要的命令参数为 <code>--use-query-log=solver:pc</code></td></tr>
+<tr><td>solver-queries.smt2</td><td>文件中以<a href="http://www.smtlib.org/">SMT-LIBv2</a>格式记录了运行过程中实际传给KLEE的underlying solver的所有queries。<br>记录的内容与solver-queries.pc含有相同的信息<br>需要的命令参数为 <code>--use-query-log=solver:smt2</code></td></tr>
+</table></p>
+
+<p><h1 id="3">每条路径的文件</h1>
+<table class="table table-bordered table-striped table-condensed">
+<tr><th>文件名</th><th>描述</th></tr>
+<tr><td>test&lt;N&gt;.ktest</td><td>文件内容为KLEE为这条路径生成的测试用例test case。可以使用<a href="http://klee.github.io/docs/tools">ktest-tool</a>查看内容。<br>可以使用命令参数 <code>--no-output</code> 禁用.ktest文件的输出</td></tr>
+<tr><td>test&lt;N&gt;.&lt;error-type&gt;.err</td><td>KLEE发现了错误error的路径将会产生这个文件。包含了这个error的信息。以文本形式储存</td></tr>
+<tr><td>test&lt;N&gt;.pc</td><td>以<a href="http://klee.github.io/docs/kquery">KQuery</a>格式记录，这个路径的约束。<br>使用命令参数 <code>--write-pcs</code> 来输出这个文件</td></tr>
+<tr><td>test&lt;N&gt;.cvc</td><td>以<a href="https://sites.google.com/site/stpfastprover/stp-documentation#TOC-The-CVC-language">CVC</a>格式记录，这个路径的约束。<br>与对应的.pc文件包含相同的信息<br>使用命令参数 <code>--write-cvcs</code> 来输出这个文件</td></tr>
+<tr><td>test&lt;N&gt;.smt2</td><td>以<a href="http://www.smtlib.org/">SMT-LIBv2</a>格式记录，这个路径的约束。<br>与对应的.pc文件包含相同的信息<br>使用命令参数 <code>--write-smt2s</code> 来输出这个文件</td></tr>
+</table></p>
+
+			</div>
+
+			
+				<h2>Comments</h2>
+				
+	<div class="ds-thread" data-thread-key="" data-title="KLEE生成的文件" data-url="http://zzzqiuchan.github.io/post/kleefiles/"></div>
+
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"zzzqiuchangithubpages"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+
+			
+		</div>
+
+  </body>
+</html>

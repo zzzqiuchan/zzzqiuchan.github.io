@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>May the starlight be with you</title>
+    <link>http://zzzqiuchan.github.io/</link>
+    <description>Recent content on May the starlight be with you</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 01 May 2016 21:58:18 +0800</lastBuildDate>
+    <atom:link href="http://zzzqiuchan.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>KLEE生成的文件</title>
+      <link>http://zzzqiuchan.github.io/post/kleefiles/</link>
+      <pubDate>Sun, 01 May 2016 21:58:18 +0800</pubDate>
+      
+      <guid>http://zzzqiuchan.github.io/post/kleefiles/</guid>
+      <description>&lt;p&gt;原文 &lt;a href=&#34;http://klee.github.io/docs/files/&#34;&gt;http://klee.github.io/docs/files/&lt;/a&gt;&lt;br /&gt;
+* &lt;a href=&#34;#1&#34;&gt;基础全局文件&lt;/a&gt;&lt;br /&gt;
+* &lt;a href=&#34;#2&#34;&gt;其他全局文件（需要命令来指定生成）&lt;/a&gt;&lt;br /&gt;
+* &lt;a href=&#34;#3&#34;&gt;每条路径的文件&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;h1 id=&#34;1&#34;&gt;基础全局文件&lt;/h1&gt;
+&lt;table class=&#34;table table-bordered table-striped table-condensed&#34;&gt;
+&lt;tr&gt;&lt;th&gt;文件名&lt;/th&gt;&lt;th&gt;描述&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;info&lt;/td&gt;&lt;td&gt;记录klee运行的各种相关信息，如使用的命令，运行时间等&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;warnings.txt&lt;/td&gt;&lt;td&gt;KLEE运行过程中生成的warning信息&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;messages.txt&lt;/td&gt;&lt;td&gt;KLEE运行过程中生成的其他messages&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;assembly.ll&lt;/td&gt;&lt;td&gt;将KLEE实际执行的LLVM bitcode转为可读的文本后的文件&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;run.stats&lt;/td&gt;&lt;td&gt;KLEE生成的各种统计信息。能够人工查看，或使用&lt;a href=&#34;http://klee.github.io/docs/tools/&#34;&gt;klee-stats&lt;/a&gt;查看&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;run.istats&lt;/td&gt;&lt;td&gt;KLEE生成的程序中每一行代码的全局统计信息global statistics&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;h1 id=&#34;2&#34;&gt;其他全局文件（需要命令来指定生成）&lt;/h1&gt;
+&lt;table class=&#34;table table-bordered table-striped table-condensed&#34;&gt;
+&lt;tr&gt;&lt;th&gt;文件名&lt;/th&gt;&lt;th&gt;描述&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;all-queries.pc&lt;/td&gt;&lt;td&gt;文件中以&lt;a href=&#34;http://klee.github.io/docs/kquery&#34;&gt;KQuery&lt;/a&gt;格式记录了KLEE在运行中产生的所有queries。&lt;br&gt;记录的queries没有经过任何优化（caching, constraint independence等），也就是说，其中有些queries从来没有被KLEE的求解器执行过，或者在执行前被修改了&lt;br&gt;需要的命令参数为 &lt;code&gt;--use-query-log=all:pc&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;all-queries.smt2&lt;/td&gt;&lt;td&gt;文件中以&lt;a href=&#34;http://www.smtlib.org/&#34;&gt;SMT-LIBv2&lt;/a&gt;格式记录了KLEE在运行中产生的所有queries。&lt;br&gt;记录的内容与all-queries.pc含有相同的信息&lt;br&gt;需要的命令参数为 &lt;code&gt;--use-query-log=all:smt2&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;solver-queries.pc&lt;/td&gt;&lt;td&gt;文件中以&lt;a href=&#34;http://klee.github.io/docs/kquery&#34;&gt;KQuery&lt;/a&gt;格式记录了运行过程中实际传给KLEE的underlying solver的所有queries。&lt;br&gt;记录的queries经过了所有的优化（caching, constraint independence等）&lt;br&gt;需要的命令参数为 &lt;code&gt;--use-query-log=solver:pc&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;solver-queries.smt2&lt;/td&gt;&lt;td&gt;文件中以&lt;a href=&#34;http://www.smtlib.org/&#34;&gt;SMT-LIBv2&lt;/a&gt;格式记录了运行过程中实际传给KLEE的underlying solver的所有queries。&lt;br&gt;记录的内容与solver-queries.pc含有相同的信息&lt;br&gt;需要的命令参数为 &lt;code&gt;--use-query-log=solver:smt2&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;h1 id=&#34;3&#34;&gt;每条路径的文件&lt;/h1&gt;
+&lt;table class=&#34;table table-bordered table-striped table-condensed&#34;&gt;
+&lt;tr&gt;&lt;th&gt;文件名&lt;/th&gt;&lt;th&gt;描述&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;test&amp;lt;N&amp;gt;.ktest&lt;/td&gt;&lt;td&gt;文件内容为KLEE为这条路径生成的测试用例test case。可以使用&lt;a href=&#34;http://klee.github.io/docs/tools&#34;&gt;ktest-tool&lt;/a&gt;查看内容。&lt;br&gt;可以使用命令参数 &lt;code&gt;--no-output&lt;/code&gt; 禁用.ktest文件的输出&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;test&amp;lt;N&amp;gt;.&amp;lt;error-type&amp;gt;.err&lt;/td&gt;&lt;td&gt;KLEE发现了错误error的路径将会产生这个文件。包含了这个error的信息。以文本形式储存&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;test&amp;lt;N&amp;gt;.pc&lt;/td&gt;&lt;td&gt;以&lt;a href=&#34;http://klee.github.io/docs/kquery&#34;&gt;KQuery&lt;/a&gt;格式记录，这个路径的约束。&lt;br&gt;使用命令参数 &lt;code&gt;--write-pcs&lt;/code&gt; 来输出这个文件&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;test&amp;lt;N&amp;gt;.cvc&lt;/td&gt;&lt;td&gt;以&lt;a href=&#34;https://sites.google.com/site/stpfastprover/stp-documentation#TOC-The-CVC-language&#34;&gt;CVC&lt;/a&gt;格式记录，这个路径的约束。&lt;br&gt;与对应的.pc文件包含相同的信息&lt;br&gt;使用命令参数 &lt;code&gt;--write-cvcs&lt;/code&gt; 来输出这个文件&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;test&amp;lt;N&amp;gt;.smt2&lt;/td&gt;&lt;td&gt;以&lt;a href=&#34;http://www.smtlib.org/&#34;&gt;SMT-LIBv2&lt;/a&gt;格式记录，这个路径的约束。&lt;br&gt;与对应的.pc文件包含相同的信息&lt;br&gt;使用命令参数 &lt;code&gt;--write-smt2s&lt;/code&gt; 来输出这个文件&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Build KLEE with LLVM 3.4 in Ubuntu-14.04.4-desktop-amd64</title>
+      <link>http://zzzqiuchan.github.io/post/buildklee/</link>
+      <pubDate>Fri, 29 Apr 2016 15:42:54 +0800</pubDate>
+      
+      <guid>http://zzzqiuchan.github.io/post/buildklee/</guid>
+      <description>&lt;p&gt;原文&lt;a href=&#34;http://klee.github.io/build-llvm34/&#34;&gt;http://klee.github.io/build-llvm34/&lt;/a&gt;&lt;br /&gt;
+Build KLEE with LLVM 3.4;&lt;br /&gt;
+安装环境：Ubuntu-14.04.4-desktop-amd64&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;更新所有的package&lt;/strong&gt;&lt;br /&gt;
+添加universe源到&lt;code&gt;/etc/apt/sources.list&lt;/code&gt;文件中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;deb http://cz.archive.ubuntu.com/ubuntu trusty main universe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;实际中需要将&lt;code&gt;cz.archive.ubuntu.com&lt;/code&gt;更改为当前最好用的镜像源。&lt;br /&gt;
+添加完毕后，更新一下&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;sudo apt-get update
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;安装依赖库&lt;/strong&gt;&lt;br /&gt;
+KLEE的依赖库和LLVM相同，在&lt;a href=&#34;http://llvm.org/docs/GettingStarted.html#requirements&#34;&gt;LLVM网站&lt;/a&gt;中有介绍。一般需要如下程序和库文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;sudo apt-get install build-essential curl git bison flex bc libcap-dev git cmake libboost-all-dev libncurses5-dev python-minimal python-pip unzip
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;一些情况下，需要设置环境变量，最好把他们放在&lt;strong&gt;.bashrc&lt;/strong&gt;这样的配置文件中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;export C_INCLUDE_PATH=/usr/include/x86_64-linux-gnu
+export CPLUS_INCLUDE_PATH=/usr/include/x86_64-linux-gnu
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;安装LLVM3.4&lt;/strong&gt;&lt;br /&gt;
+添加&lt;a href=&#34;http://llvm.org/apt/&#34;&gt;LLVM源&lt;/a&gt;到&lt;code&gt;/etc/apt/sources.list&lt;/code&gt;文件中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;deb http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.4 main
+deb-src http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.4 main
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;添加之后，还需要添加key&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;之后，进行更新，安装LLVM3.4&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;sudo apt-get update
+sudo apt-get install clang-3.4 llvm-3.4 llvm-3.4-dev llvm-3.4-tools
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后，确保，PATH中有llvm-config&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;sudo ln -sf /usr/bin/llvm-config-3.4 /usr/bin/llvm-config
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Build STP&lt;/strong&gt;&lt;br /&gt;
+KLEE是基于STP约束求解器的，首先build minisat&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;git clone https://github.com/stp/minisat.git
+cd minisat
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr/ ../
+sudo make install
+cd ../../
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接下来，build STP。&lt;br /&gt;
+因为，Shared STP libraries会导致KLEE出现&lt;a href=&#34;https://www.mail-archive.com/klee-dev@imperial.ac.uk/msg01704.html&#34;&gt;问题&lt;/a&gt;，因此需要禁用；&lt;br /&gt;
+python interface需要Shared STP libraries支持，因此，也禁用&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;git clone https://github.com/stp/stp.git
+mkdir stp/build
+cd stp/build
+cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DENABLE_PYTHON_INTERFACE:BOOL=OFF ..
+make
+sudo make install
+cd ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;按照STP的文档说明，在使用STP之前应该运行如下指令（对于KLEE来说也是这样）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;ulimit -s unlimited
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过编辑&lt;code&gt;/etc/security/limits.conf&lt;/code&gt;文件，能够将此持久化&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Build uclibc and the POSIX environment model&lt;/strong&gt;&lt;br /&gt;
+如果需要将KLEE应用到真实的程序上，就需要启用KLEE POSIX runtime，而这需要&lt;a href=&#34;http://uclibc.org/&#34;&gt;uClibc&lt;/a&gt;  C library&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;git clone https://github.com/klee/klee-uclibc.git
+cd klee-uclibc
+./configure --make-llvm-lib
+make -j2
+cd ..
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;获取KLEE源文件&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;git clone https://github.com/klee/klee.git
+cd klee
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;配置KLEE&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;./configure --with-stp=/full/path/to/stp/build --with-uclibc=/full/path/to/klee-uclibc --enable-posix-runtime
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;/full/path/to/stp/build&lt;/code&gt;根据实际位置，替换为&lt;code&gt;stp/build&lt;/code&gt;文件夹的全路径；&lt;br /&gt;
+&lt;code&gt;/full/path/to/klee-uclibc&lt;/code&gt;根据实际位置，替换为&lt;code&gt;klee-uclibc&lt;/code&gt;文件夹的全路径；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;编译&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Bash&#34;&gt;make
+make test
+sudo make install
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

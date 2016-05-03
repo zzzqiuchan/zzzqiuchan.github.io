@@ -1,0 +1,205 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.15" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> Build KLEE with LLVM 3.4 in Ubuntu-14.04.4-desktop-amd64 &middot; May the starlight be with you </title>
+
+  
+  <link rel="stylesheet" href="http://zzzqiuchan.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://zzzqiuchan.github.io/css/syntax.css">
+  <link rel="stylesheet" href="http://zzzqiuchan.github.io/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.useso.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+</head>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+<script>hljs.initHighlightingOnLoad();</script>
+	<body class="theme-base-0d layout-reverse">
+		
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="http://zzzqiuchan.github.io/"><h1>星空</h1></a>
+      <p class="lead">
+       描述什么的从来没有存在过呀！ 
+      </p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li><a href="http://zzzqiuchan.github.io//">Home</a> </li>
+      <li><a href="http://zzzqiuchan.github.io//categories/">Categories</a> </li>
+      <li><a href="http://zzzqiuchan.github.io//tags/">Tags</a> </li>
+    </ul>
+
+    <p>
+      &copy; 2016. All rights reserved. 
+      <br>Powered by <a href="http://gohugo.io/">Hugo</a>. <a href="https://golang.org/">#Golang</a>.
+    </p>
+    
+      <p>
+        <a href="https://github.com/zzzqiuchan" target="_blank">
+        <i class="fa fa-github-square fa-fw"></i>GitHub</a>
+      </p>
+    
+  </div>
+</div>
+
+
+		<div class="content container">
+			<div class="post">
+			 	<h1>Build KLEE with LLVM 3.4 in Ubuntu-14.04.4-desktop-amd64</h1>
+			  <span class="post-date">Fri, Apr 29, 2016</span>
+			      <p>原文<a href="http://klee.github.io/build-llvm34/">http://klee.github.io/build-llvm34/</a><br />
+Build KLEE with LLVM 3.4;<br />
+安装环境：Ubuntu-14.04.4-desktop-amd64</p>
+
+<ol>
+<li><p><strong>更新所有的package</strong><br />
+添加universe源到<code>/etc/apt/sources.list</code>文件中</p>
+
+<pre><code>deb http://cz.archive.ubuntu.com/ubuntu trusty main universe
+</code></pre>
+
+<p>实际中需要将<code>cz.archive.ubuntu.com</code>更改为当前最好用的镜像源。<br />
+添加完毕后，更新一下</p>
+
+<pre><code class="language-Bash">sudo apt-get update
+</code></pre></li>
+
+<li><p><strong>安装依赖库</strong><br />
+KLEE的依赖库和LLVM相同，在<a href="http://llvm.org/docs/GettingStarted.html#requirements">LLVM网站</a>中有介绍。一般需要如下程序和库文件</p>
+
+<pre><code class="language-Bash">sudo apt-get install build-essential curl git bison flex bc libcap-dev git cmake libboost-all-dev libncurses5-dev python-minimal python-pip unzip
+</code></pre>
+
+<p>一些情况下，需要设置环境变量，最好把他们放在<strong>.bashrc</strong>这样的配置文件中</p>
+
+<pre><code class="language-Bash">export C_INCLUDE_PATH=/usr/include/x86_64-linux-gnu
+export CPLUS_INCLUDE_PATH=/usr/include/x86_64-linux-gnu
+</code></pre></li>
+
+<li><p><strong>安装LLVM3.4</strong><br />
+添加<a href="http://llvm.org/apt/">LLVM源</a>到<code>/etc/apt/sources.list</code>文件中</p>
+
+<pre><code>deb http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.4 main
+deb-src http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.4 main
+</code></pre>
+
+<p>添加之后，还需要添加key</p>
+
+<pre><code class="language-Bash">wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
+</code></pre>
+
+<p>之后，进行更新，安装LLVM3.4</p>
+
+<pre><code class="language-Bash">sudo apt-get update
+sudo apt-get install clang-3.4 llvm-3.4 llvm-3.4-dev llvm-3.4-tools
+</code></pre>
+
+<p>最后，确保，PATH中有llvm-config</p>
+
+<pre><code class="language-Bash">sudo ln -sf /usr/bin/llvm-config-3.4 /usr/bin/llvm-config
+</code></pre></li>
+
+<li><p><strong>Build STP</strong><br />
+KLEE是基于STP约束求解器的，首先build minisat</p>
+
+<pre><code class="language-Bash">git clone https://github.com/stp/minisat.git
+cd minisat
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr/ ../
+sudo make install
+cd ../../
+</code></pre>
+
+<p>接下来，build STP。<br />
+因为，Shared STP libraries会导致KLEE出现<a href="https://www.mail-archive.com/klee-dev@imperial.ac.uk/msg01704.html">问题</a>，因此需要禁用；<br />
+python interface需要Shared STP libraries支持，因此，也禁用</p>
+
+<pre><code class="language-Bash">git clone https://github.com/stp/stp.git
+mkdir stp/build
+cd stp/build
+cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DENABLE_PYTHON_INTERFACE:BOOL=OFF ..
+make
+sudo make install
+cd ..
+</code></pre>
+
+<p>按照STP的文档说明，在使用STP之前应该运行如下指令（对于KLEE来说也是这样）</p>
+
+<pre><code class="language-Bash">ulimit -s unlimited
+</code></pre>
+
+<p>通过编辑<code>/etc/security/limits.conf</code>文件，能够将此持久化</p></li>
+
+<li><p><strong>Build uclibc and the POSIX environment model</strong><br />
+如果需要将KLEE应用到真实的程序上，就需要启用KLEE POSIX runtime，而这需要<a href="http://uclibc.org/">uClibc</a>  C library</p>
+
+<pre><code class="language-Bash">git clone https://github.com/klee/klee-uclibc.git
+cd klee-uclibc
+./configure --make-llvm-lib
+make -j2
+cd ..
+</code></pre></li>
+
+<li><p><strong>获取KLEE源文件</strong></p>
+
+<pre><code class="language-Bash">git clone https://github.com/klee/klee.git
+cd klee
+</code></pre></li>
+
+<li><p><strong>配置KLEE</strong></p>
+
+<pre><code class="language-Bash">./configure --with-stp=/full/path/to/stp/build --with-uclibc=/full/path/to/klee-uclibc --enable-posix-runtime
+</code></pre>
+
+<p><code>/full/path/to/stp/build</code>根据实际位置，替换为<code>stp/build</code>文件夹的全路径；<br />
+<code>/full/path/to/klee-uclibc</code>根据实际位置，替换为<code>klee-uclibc</code>文件夹的全路径；</p></li>
+
+<li><p><strong>编译</strong></p>
+
+<pre><code class="language-Bash">make
+make test
+sudo make install
+</code></pre></li>
+</ol>
+
+			</div>
+
+			
+				<h2>Comments</h2>
+				
+	<div class="ds-thread" data-thread-key="" data-title="Build KLEE with LLVM 3.4 in Ubuntu-14.04.4-desktop-amd64" data-url="http://zzzqiuchan.github.io/post/buildklee/"></div>
+
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"zzzqiuchangithubpages"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+
+			
+		</div>
+
+  </body>
+</html>
