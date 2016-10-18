@@ -11,10 +11,10 @@
     
     <item>
       <title>KLEE生成的文件</title>
-      <link>http://zzzqiuchan.github.io/post/kleefiles/</link>
+      <link>http://zzzqiuchan.github.io/post/2016/05/01/kleefiles/</link>
       <pubDate>Sun, 01 May 2016 21:58:18 +0800</pubDate>
       
-      <guid>http://zzzqiuchan.github.io/post/kleefiles/</guid>
+      <guid>http://zzzqiuchan.github.io/post/2016/05/01/kleefiles/</guid>
       <description>&lt;p&gt;原文 &lt;a href=&#34;http://klee.github.io/docs/files/&#34;&gt;http://klee.github.io/docs/files/&lt;/a&gt;&lt;br /&gt;
 &lt;li&gt;&lt;a href=&#34;#1&#34;&gt;基础全局文件&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#2&#34;&gt;其他全局文件（需要命令来指定生成）&lt;/a&gt;&lt;/li&gt;
@@ -54,10 +54,10 @@
     
     <item>
       <title>Build KLEE with LLVM 3.4 in Ubuntu-14.04.4-desktop-amd64</title>
-      <link>http://zzzqiuchan.github.io/post/buildklee/</link>
+      <link>http://zzzqiuchan.github.io/post/2016/04/29/buildklee/</link>
       <pubDate>Fri, 29 Apr 2016 15:42:54 +0800</pubDate>
       
-      <guid>http://zzzqiuchan.github.io/post/buildklee/</guid>
+      <guid>http://zzzqiuchan.github.io/post/2016/04/29/buildklee/</guid>
       <description>&lt;p&gt;原文&lt;a href=&#34;http://klee.github.io/build-llvm34/&#34;&gt;http://klee.github.io/build-llvm34/&lt;/a&gt;&lt;br /&gt;
 Build KLEE with LLVM 3.4;&lt;br /&gt;
 安装环境：Ubuntu-14.04.4-desktop-amd64&lt;/p&gt;
