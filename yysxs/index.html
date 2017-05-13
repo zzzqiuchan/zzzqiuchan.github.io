@@ -1280,6 +1280,113 @@ var _hmt = _hmt || [];
 </script>
 
 <script>
+var dict = {
+"cimutongzi":"茨木童子",
+"cimu":"茨木",
+"茨木tongzi":"茨木童子",
+"datiangou":"大天狗",
+"huaniaojuan":"花鸟卷",
+"huang":"荒",
+"huangchuanzhizhu":"荒川之主",
+"荒chuanzhizhu":"荒川之主",
+"jiutuntongzi":"酒吞童子",
+"jiutun":"酒吞",
+"酒吞tongzi":"酒吞童子",
+"liangmianfo":"两面佛",
+"qingxingdeng":"青行灯",
+"xiaolunan":"小鹿男",
+"yanmo":"阎魔",
+"yaodaoji":"妖刀姬",
+"yimulian":"一目连",
+
+"bailang":"白狼",
+"baitongzi":"白童子",
+"banruo":"般若",
+"bore":"般若",
+"erkounv":"二口女",
+"fenghuanghuo":"凤凰火",
+"guhuodiao":"姑获鸟",
+"gunv":"骨女",
+"guinvgongye":"鬼女红叶",
+"guishibai":"鬼使白",
+"guishihei":"鬼使黑",
+"haifangzhu":"海坊主",
+"heitongzi":"黑童子",
+"huibishou":"惠比寿",
+"kuileishi":"傀儡师",
+"lianyou":"镰鼬",
+"luoxinfu":"络新妇",
+"laoxinfu":"络新妇",
+"mengpo":"孟婆",
+"panguan":"判官",
+"qingfangzhu":"青坊主",
+"qingji":"清姬",
+"quanshen":"犬神",
+"shimengmo":"食梦貘",
+"taohuayao":"桃花妖",
+"tiaotiaogege":"跳跳哥哥",
+"wannianzhu":"万年竹",
+"xixueji":"吸血姬",
+"xixieji":"吸血姬",
+"xuenv":"雪女",
+"yaohu":"妖狐",
+"yaoqinshi":"妖琴师",
+"yecha":"夜叉",
+"yinghuayao":"樱花妖",
+"yijinzhentian":"以津真天",
+"zhen":"鸩",
+
+"bingyong":"兵俑",
+"choushizhinv":"丑时之女",
+"duyanxiaoseng":"独眼小僧",
+"egui":"饿鬼",
+"gulonghuo":"古笼火",
+"guanhu":"管狐",
+"hetong":"河童",
+"hudiejing":"蝴蝶精",
+"jiaotu":"椒图",
+"jue":"觉",
+"jiumingmao":"九命猫",
+"limao":"狸猫",
+"liyujing":"鲤鱼精",
+"qingwaciqi":"青蛙瓷器",
+"sanweihu":"三尾狐",
+"shantong":"山童",
+"shantu":"山兔",
+"shifagui":"食发鬼",
+"shouwu":"首无",
+"tiaotiaodidi":"跳跳弟弟",
+"didi":"弟弟",
+"tiaotiaomeimei":"跳跳妹妹",
+"meimei":"妹妹",
+"tieshu":"铁鼠",
+"tongnan":"童男",
+"tongnv":"童女",
+"wugushi":"巫蛊师",
+"wushizhiling":"武士之灵",
+"yatiangou":"鸦天狗",
+"yingcao":"萤草",
+"yunv":"雨女",
+"zuofutongzi":"座敷童子",
+
+"chishe":"赤舌",
+"daomuxiaogui":"盗墓小鬼",
+"denglonggui":"灯笼鬼",
+"jishenghun":"寄生魂",
+"tangzhisanyao":"唐纸伞妖",
+"tidengxiaoseng":"提灯小僧",
+"tianxieguichi":"天邪鬼赤",
+"guichi":"鬼赤",
+"tianxieguihuang":"天邪鬼黄",
+"guihuang":"鬼黄",
+"tianxieguilv":"天邪鬼绿",
+"guilv":"鬼绿",
+"tianxieguiqing":"天邪鬼青",
+"guiqing":"鬼青",
+"tubi":"涂壁",
+"zhoushen":"帚神"
+};
+
 $(document).ready(function() {
     $('#yyxsfycx').DataTable({
 		"paging": false,
@@ -1291,6 +1398,22 @@ $(document).ready(function() {
         	searchPlaceholder: "式神名字或者其它条件"
     	}
 	});
+    
+    $('#yyxsfycx_filter label input').bind('input propertychange', function() {
+        var sentence = $(this).val();
+        var words = sentence.split(/\s+/);
+        var change = false;
+        for(var i = 0, l = words.length; i < l; i++) {
+            var t = words[i];
+            if (dict.hasOwnProperty(t)) {
+                words[i] = dict[t];
+                change = true;
+            }
+        }
+        if (change) {
+            $(this).val(words.join(' '));
+        }
+    });
 } );
 </script>
 
