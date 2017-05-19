@@ -175,7 +175,7 @@
       <pubDate>Sun, 01 May 2016 21:58:18 +0800</pubDate>
       
       <guid>//zzzqiuchan.github.io/post/2016/05/01/kleefiles/</guid>
-      <description>&lt;p&gt;原文 &amp;lt;//klee.github.io/docs/files/&amp;gt;&lt;br /&gt;
+      <description>&lt;p&gt;&lt;a href=&#34;//klee.github.io/docs/files/&#34;&gt;原文&lt;/a&gt;&lt;br /&gt;
 &lt;li&gt;&lt;a href=&#34;#1&#34;&gt;基础全局文件&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#2&#34;&gt;其他全局文件（需要命令来指定生成）&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#3&#34;&gt;每条路径的文件&lt;/a&gt;&lt;/li&gt;&lt;/p&gt;
@@ -218,7 +218,7 @@
       <pubDate>Fri, 29 Apr 2016 15:42:54 +0800</pubDate>
       
       <guid>//zzzqiuchan.github.io/post/2016/04/29/buildklee/</guid>
-      <description>&lt;p&gt;原文&amp;lt;//klee.github.io/build-llvm34/&amp;gt;&lt;br /&gt;
+      <description>&lt;p&gt;&lt;a href=&#34;//klee.github.io/build-llvm34/&#34;&gt;原文&lt;/a&gt;&lt;br /&gt;
 Build KLEE with LLVM 3.4;&lt;br /&gt;
 安装环境：Ubuntu-14.04.4-desktop-amd64&lt;/p&gt;
 
