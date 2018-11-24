@@ -37,13 +37,6 @@
 <div>
 
 <script>
-var imgs = ["/sdxxdd/xuanshou/01.png",
-            "/sdxxdd/xuanshou/02.png",
-            "/sdxxdd/xuanshou/03.png",
-            "/sdxxdd/xuanshou/04.png",
-            "/sdxxdd/xuanshou/05.png",
-            "/sdxxdd/xuanshou/06.png",
-            "/sdxxdd/xuanshou/07.png"];
 function shuffle(arr) {
   var i = arr.length, t, j;
   while (i) {
@@ -54,6 +47,13 @@ function shuffle(arr) {
   }
 }
 function randomSetImg() {
+    var imgs = ["/sdxxdd/xuanshou/01.png",
+                "/sdxxdd/xuanshou/02.png",
+                "/sdxxdd/xuanshou/03.png",
+                "/sdxxdd/xuanshou/04.png",
+                "/sdxxdd/xuanshou/05.png",
+                "/sdxxdd/xuanshou/06.png",
+                "/sdxxdd/xuanshou/07.png"];
     shuffle(imgs);
     document.getElementById("img1").src=imgs[0];
     document.getElementById("img2").src=imgs[1];
