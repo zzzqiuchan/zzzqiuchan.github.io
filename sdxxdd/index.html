@@ -31,6 +31,11 @@
             <td align="center"><img id="img2" src="/sdxxdd/xuanshou/00.png"></td>
             <td align="center"><img id="img3" src="/sdxxdd/xuanshou/00.png"></td>
         </tr>
+        <tr>
+            <td align="center"><a id="txt1">萤草</a></td>
+            <td align="center"><a id="txt2">萤草</a></td>
+            <td align="center"><a id="txt3">萤草</a></td>
+        </tr>
     </tbody>
 </table>
 </div>
@@ -46,17 +51,20 @@ function shuffle(arr) {
   }
 }
 function randomSetImg() {
-    var imgs = ["/sdxxdd/xuanshou/01.png",
-                "/sdxxdd/xuanshou/02.png",
-                "/sdxxdd/xuanshou/03.png",
-                "/sdxxdd/xuanshou/04.png",
-                "/sdxxdd/xuanshou/05.png",
-                "/sdxxdd/xuanshou/06.png",
-                "/sdxxdd/xuanshou/07.png"];
+    var imgs = [["/Desktop/Python3/hebo/xuanshou/01.png", "锦鲤"],
+                ["/Desktop/Python3/hebo/xuanshou/02.png", "鳐鱼"],
+                ["/Desktop/Python3/hebo/xuanshou/03.png", "皮皮虾"],
+                ["/Desktop/Python3/hebo/xuanshou/04.png", "绿毛龟"],
+                ["/Desktop/Python3/hebo/xuanshou/05.png", "海马"],
+                ["/Desktop/Python3/hebo/xuanshou/06.png", "河豚"],
+                ["/Desktop/Python3/hebo/xuanshou/07.png", "小丑鱼"]];
     shuffle(imgs);
-    document.getElementById("img1").src=imgs[0];
-    document.getElementById("img2").src=imgs[1];
-    document.getElementById("img3").src=imgs[2];
+    document.getElementById("img1").src=imgs[0][0];
+    document.getElementById("img2").src=imgs[1][0];
+    document.getElementById("img3").src=imgs[2][0];
+    $("#txt1").text(imgs[0][1]);
+    $("#txt2").text(imgs[1][1]);
+    $("#txt3").text(imgs[2][1]);
 }
 $(document).ready(function() {
     randomSetImg();
