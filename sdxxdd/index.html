@@ -41,6 +41,7 @@
 </div>
 
 <script>
+var flag = 1;
 function shuffle(arr) {
   var i = arr.length, t, j;
   while (i) {
@@ -51,20 +52,21 @@ function shuffle(arr) {
   }
 }
 function randomSetImg() {
-    var imgs = [["/sdxxdd/xuanshou/01.png", "锦鲤"],
-                ["/sdxxdd/xuanshou/02.png", "鳐鱼"],
-                ["/sdxxdd/xuanshou/03.png", "皮皮虾"],
-                ["/sdxxdd/xuanshou/04.png", "绿毛龟"],
-                ["/sdxxdd/xuanshou/05.png", "海马"],
-                ["/sdxxdd/xuanshou/06.png", "河豚"],
-                ["/sdxxdd/xuanshou/07.png", "小丑鱼"]];
+    var imgs = [["/sdxxdd/xuanshou/01.png", ["锦鲤","黄粱一梦","阿房一炬"]],
+                ["/sdxxdd/xuanshou/02.png", ["鳐鱼","电掣风驰","爪黄飞电"]],
+                ["/sdxxdd/xuanshou/03.png", ["皮皮虾","乱世佳皮","久酿陈皮"]],
+                ["/sdxxdd/xuanshou/04.png", ["绿毛龟","不动如青山","素素千斤顶"]],
+                ["/sdxxdd/xuanshou/05.png", ["海马","马大哈","马小虎"]],
+                ["/sdxxdd/xuanshou/06.png", ["河豚","燕瘦环肥","珠圆玉润"]],
+                ["/sdxxdd/xuanshou/07.png", ["小丑鱼","闭月羞花","明日黄花"]]];
     shuffle(imgs);
     document.getElementById("img1").src=imgs[0][0];
     document.getElementById("img2").src=imgs[1][0];
     document.getElementById("img3").src=imgs[2][0];
-    $("#txt1").text(imgs[0][1]);
-    $("#txt2").text(imgs[1][1]);
-    $("#txt3").text(imgs[2][1]);
+    $("#txt1").text(imgs[0][1][flag]);
+    $("#txt2").text(imgs[1][1][flag]);
+    $("#txt3").text(imgs[2][1][flag]);
+    flag = flag>1?1:2;
 }
 $(document).ready(function() {
     randomSetImg();
