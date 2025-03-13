@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kindle Clock & Calendar</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        #clockWeather {
+            position: absolute;
+        }
+        #clock {
+            position: relative;
+            font-size: 12vw;
+            font-weight: bold;
+            z-index: 1;
+        }
+        #weather {
+            position: relative;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 5px;
+        }
+        #calendar {
+            position: absolute;
+            font-size: 3vw;
+            z-index: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            padding: 5px;
+            text-align: center;
+            font-size: 3vw;
+        }
+        .highlight {
+            background-color: black;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .weekday-header {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .current-day {
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="clockWeather">
+        <div id="clock"></div>
+        <div id="weather"></div>
+    </div>
+    <div id="calendar"></div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const cityParam = urlParams.get("city"); // https://lbs.amap.com/api/webservice/download 中城市编码 adcode
+        const keyParam = urlParams.get("key");
+        let city = "440300"; // 110000 北京 310000 上海 440100 广州 440300 深圳 
+        let key = "<替换为真正的用户key或通过参数传入>";
+        if (cityParam) {
+            city = cityParam;
+        }
+        if (keyParam) {
+            key = keyParam;
+        }
+        async function fetchWeather() {
+            /*
+            try {
+                // 使用高德地图API获取地理位置
+                const response = await fetch(`https://restapi.amap.com/v3/ip?output=JSON&key=${key}`);
+                const data = await response.json();
+
+                if (data.status === "1") {
+                    city = data.adcode;
+                }
+            } catch (error) {
+                console.log("定位失败");
+            }
+            */
+
+            try {
+                // 使用高德地图API获取天气信息
+                const response = await fetch(`https://restapi.amap.com/v3/weather/weatherInfo?city=${city}&extensions=all&output=JSON&key=${key}`);
+                const data = await response.json();
+
+                const weatherElement = document.getElementById("weather");
+                weatherElement.children = [];
+
+                if (data.status === "1" && data.forecasts.length > 0) {
+
+                    const forecast = data.forecasts[0];
+                    const city = `${forecast.province} ${forecast.city}`;
+
+                    const title = document.createElement("p");
+                    title.innerText = `📍 ${city} 天气预报 (${forecast.reporttime})`;
+                    weatherElement.appendChild(title);
+
+                    forecast.casts.forEach((day, index) => {
+                        const weather = document.createElement("p");
+                        const label = index === 0 ? "今天" : `星期${day.week}`;
+                        weather.innerText = `📅 ${label} ${day.date} | ${day.dayweather} | 🌡️ ${day.daytemp}°C / ${day.nighttemp}°C | 💨 ${day.daywind} ${day.daypower}级`;
+                        weatherElement.appendChild(weather);
+                    });
+                } else {
+                    weatherElement.innerText = "无法获取天气数据";
+                }
+            } catch (error) {
+                document.getElementById("weather").innerText = "天气获取失败";
+            }
+
+            updateClock();
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById("clock").innerText = `${hours}:${minutes}`;
+
+            generateCalendar(now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getDay());
+            moveElementsRandomly(); // 进行随机偏移
+        }
+
+        function generateCalendar(year, month, today, currentWeekday) {
+            const firstDay = new Date(year, month - 1, 1).getDay();
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            const calendarContainer = document.getElementById("calendar");
+            calendarContainer.innerHTML = ""; // 清空当前内容
+
+            // 创建标题
+            const title = document.createElement("h2");
+            title.innerText = `📅 ${year}年${month}月`;
+            calendarContainer.appendChild(title);
+
+            // 创建表格
+            const table = document.createElement("table");
+
+            // 创建星期栏
+            const headerRow = document.createElement("tr");
+            const daysOfWeek = ["日", "一", "二", "三", "四", "五", "六"];
+
+            // 星期行加特殊背景颜色
+            daysOfWeek.forEach((day, index) => {
+                const th = document.createElement("td");
+                th.innerText = day;
+                th.classList.add("weekday-header");
+                if (index === currentWeekday) {
+                    th.classList.add("current-day"); // 当前星期几特殊标记
+                }
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            let day = 1;
+            // 第一行（包含空白）
+            const firstRow = document.createElement("tr");
+            for (let i = 0; i < 7; i++) {
+                const td = document.createElement("td");
+                if (i < firstDay) {
+                    firstRow.appendChild(td); // 空白格
+                } else {
+                    td.innerText = day;
+                    if (day === today) {
+                        td.classList.add("highlight");
+                    }
+                    firstRow.appendChild(td);
+                    day++;
+                }
+            }
+            table.appendChild(firstRow);
+
+            // 其他行（填充日期）
+            while (day <= daysInMonth) {
+                const row = document.createElement("tr");
+                for (let i = 0; i < 7; i++) {
+                    const td = document.createElement("td");
+                    if (day <= daysInMonth) {
+                        td.innerText = day;
+                        if (day === today) {
+                            td.classList.add("highlight");
+                        }
+                        day++;
+                    }
+                    row.appendChild(td);
+                }
+                table.appendChild(row);
+            }
+
+            calendarContainer.appendChild(table);
+        }
+
+        function moveElementsRandomly() {
+            const clock = document.getElementById("clockWeather");
+            const calendar = document.getElementById("calendar");
+
+            const clockWidth = clock.offsetWidth;
+            const clockHeight = clock.offsetHeight;
+            const calendarWidth = calendar.offsetWidth;
+            const calendarHeight = calendar.offsetHeight;
+
+            console.log(clockWidth, clockHeight, calendarWidth, calendarHeight);
+
+            let clockX, clockY;
+
+            // 1. 执行时钟的随机偏移，确保能够完整显示
+            const clockMaxX = window.innerWidth - clockWidth - 50;
+            const clockMaxY = window.innerHeight - clockHeight - 50;
+            clockX = Math.random() * clockMaxX + 25;
+            clockY = Math.random() * clockMaxY + 25;
+            clockX = Math.max(clockX, 0);
+            clockY = Math.max(clockY, 0);
+
+            // 设置时钟位置
+            clock.style.left = `${clockX}px`;
+            clock.style.top = `${clockY}px`;
+
+            // 2. 计算时钟左方、右方、上方、下方的剩余空间
+            const leftSpace = clockX;
+            const rightSpace = window.innerWidth - (clockX + clockWidth);
+            const topSpace = clockY;
+            const bottomSpace = window.innerHeight - (clockY + clockHeight);
+
+            // 3. 确定哪个区域空间最大
+            let maxSpaceX, maxSpaceY, calendarX, calendarY;
+            let left = 0, top = 0;
+
+            if (leftSpace >= rightSpace && leftSpace >= topSpace && leftSpace >= bottomSpace) {
+                maxSpaceX = leftSpace - calendarWidth - 50;
+                maxSpaceY = window.innerHeight - calendarHeight - 50
+            } else if (rightSpace >= leftSpace && rightSpace >= topSpace && rightSpace >= bottomSpace) {
+                maxSpaceX = rightSpace - calendarWidth - 50;
+                maxSpaceY = window.innerHeight - calendarHeight - 50
+                left = clockX + clockWidth;
+            } else if (topSpace >= leftSpace && topSpace >= rightSpace && topSpace >= bottomSpace) {
+                maxSpaceX = window.innerWidth - calendarWidth - 50;
+                maxSpaceY = topSpace - calendarHeight - 50;
+            } else {
+                maxSpaceX = window.innerWidth - calendarWidth - 50;
+                maxSpaceY = bottomSpace - calendarHeight - 50;
+                top = clockY + clockHeight;
+            }
+
+            // 在最大空间内进行随机偏移，确保月历显示完整
+            calendarX = Math.random() * maxSpaceX + left + 25;
+            calendarY = Math.random() * maxSpaceY + top + 25;
+            calendarX = Math.max(calendarX, 0);
+            calendarY = Math.max(calendarY, 0);
+
+            // 设置月历位置
+            calendar.style.left = `${calendarX}px`;
+            calendar.style.top = `${calendarY}px`;
+        }
+
+        fetchWeather();
+        // updateClock();
+        setInterval(updateClock, 60000); // 每分钟更新时间
+        setInterval(fetchWeather, 3600000); // 每小时更新天气
+    </script>
+</body>
+</html>
