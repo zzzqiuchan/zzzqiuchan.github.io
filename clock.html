@@ -75,7 +75,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const cityParam = urlParams.get("city"); // https://lbs.amap.com/api/webservice/download 中城市编码 adcode
         const keyParam = urlParams.get("key");
-        let city = "440300"; // 110000 北京 310000 上海 440100 广州 440300 深圳 
+        let city = "440305"; // 110000 北京 110108 海淀区 310000 上海 310115 浦东新区 440100 广州 440106 天河区 440300 深圳 440305 南山区
         let key = "<替换为真正的用户key或通过参数传入>";
         if (cityParam) {
             city = cityParam;
@@ -84,19 +84,19 @@
             key = keyParam;
         }
         async function fetchWeather() {
-            /*
-            try {
-                // 使用高德地图API获取地理位置
-                const response = await fetch(`https://restapi.amap.com/v3/ip?output=JSON&key=${key}`);
-                const data = await response.json();
+            if (city === "auto") {
+                try {
+                    // 使用高德地图API获取地理位置
+                    const response = await fetch(`https://restapi.amap.com/v3/ip?output=JSON&key=${key}`);
+                    const data = await response.json();
 
-                if (data.status === "1") {
-                    city = data.adcode;
+                    if (data.status === "1") {
+                        city = data.adcode;
+                    }
+                } catch (error) {
+                    console.log("定位失败");
                 }
-            } catch (error) {
-                console.log("定位失败");
             }
-            */
 
             try {
                 // 使用高德地图API获取天气信息
