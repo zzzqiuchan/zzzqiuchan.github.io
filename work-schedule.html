@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查看排班情况</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .weekend {
+            background-color: #f4f4f4;
+        }
+        .today {
+            background-color: #ffeb3b;
+        }
+        .controls {
+            margin: 10px 0;
+        }
+        .time-bar-wrapper {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 5px;
+            height: 25px; /* 减小时间条的高度 */
+            position: relative;
+        }
+        .time-bar {
+            height: 100%;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .work-time {
+            background-color: #4caf50;
+        }
+        .rest-time {
+            background-color: #d3d3d3;
+        }
+        .schedule-row {
+            text-align: center;
+            height: 80px; /* 增大表格行高度 */
+        }
+        .json-editor {
+            width: 100%;
+            height: 150px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .date-column, .weekday-column {
+            width: 10%;
+        }
+        .time-column {
+            width: 80%;
+        }
+        .time-label {
+            position: absolute;
+            font-size: 12px;
+            color: #333;
+            white-space: nowrap;
+        }
+        .time-label-start {
+            top: -20px; /* 起始时间标签放在条形图上方 */
+            left: 0;
+        }
+        .time-label-end {
+            bottom: -20px; /* 结束时间标签放在条形图下方 */
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>查看排班情况</h1>
+
+    <!-- 控制面板 -->
+    <div class="controls">
+        <label for="start-date">选择排班起始日期:</label>
+        <input type="date" id="start-date" value="2025-03-01">
+        
+        <label for="month">选择查看月份:</label>
+        <input type="month" id="month" onchange="updateURL()">
+
+        <button onclick="generateSchedule(true)">生成排班</button>
+        <button onclick="resetScheduleConfig()">重置配置</button>
+    </div>
+
+    <h2>编辑排班周期</h2>
+    <textarea id="shift-schedule-json" class="json-editor">
+[
+    ["8:00-12:00", "14:00-17:00"],
+    ["8:00-17:00"],
+    ["17:00-22:00"],
+    ["17:00-22:00"],
+    ["3:00-8:00", "22:00-24:00"],
+    ["0:00-3:00"],
+    [],
+    []
+]
+    </textarea>
+
+    <h2>排班情况表</h2>
+    <table id="schedule-table">
+        <thead>
+            <tr>
+                <th class="date-column">日期</th>
+                <th class="weekday-column">星期</th>
+                <th class="time-column">工作时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 排班表将根据设置的周期生成 -->
+        </tbody>
+    </table>
+
+    <script>
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function updateURL() {
+            const selectedDate = document.getElementById('datePicker').value;
+            if (selectedDate) {
+                window.location.search = `?date=${selectedDate}`;
+            }
+        }
+
+        // 设置默认查看月份
+        let selectedDate = getQueryParam('date');
+        if (!selectedDate) {
+            selectedDate = new Date().toISOString().slice(0, 7);
+        }
+        document.getElementById('month').value = selectedDate;
+
+        // 默认配置
+        const defaultStartDate = "2025-03-01";
+        const defaultShiftSchedule = [
+            ["8:00-12:00", "14:00-17:00"],
+            ["8:00-17:00"],
+            ["17:00-22:00"],
+            ["17:00-22:00"],
+            ["3:00-8:00", "22:00-24:00"],
+            ["0:00-3:00"],
+            [],
+            [],
+        ];
+
+        // 重置配置
+        function resetScheduleConfig() {
+            document.getElementById('start-date').value = defaultStartDate;
+            // document.getElementById('shift-schedule-json').value = JSON.stringify(defaultShiftSchedule, null, 4);
+            document.getElementById('shift-schedule-json').value = `[\n    ${defaultShiftSchedule.map(arr => JSON.stringify(arr)).join(",\n    ")}\n]`;
+        }
+
+        // 检查本地存储是否有保存的排班配置
+        function loadConfig() {
+            const savedStartDate = localStorage.getItem('start-date');
+            const savedShiftSchedule = localStorage.getItem('shift-schedule-json');
+
+            // 如果有保存的配置，则加载，否则使用默认配置
+            if (savedStartDate) {
+                document.getElementById('start-date').value = savedStartDate;
+            } else {
+                document.getElementById('start-date').value = defaultStartDate;
+            }
+
+            if (savedShiftSchedule) {
+                document.getElementById('shift-schedule-json').value = savedShiftSchedule;
+            } else {
+                document.getElementById('shift-schedule-json').value = JSON.stringify(defaultShiftSchedule, null, 4);
+            }
+        }
+
+        // 保存配置到本地
+        function saveConfig(saveOrNot) {
+            const startDate = document.getElementById('start-date').value;
+            const shiftScheduleJson = document.getElementById('shift-schedule-json').value;
+
+            // 确保 start-date 和 shift-schedule-json 都有效
+            if (startDate && shiftScheduleJson) {
+                try {
+                    // 验证 JSON 格式是否有效
+                    const shiftSchedule = JSON.parse(shiftScheduleJson);
+                    if (!Array.isArray(shiftSchedule)) {
+                        alert("排班周期配置的 JSON 数组格式无效！");
+                        return false;
+                    }
+                    // 验证 JSON 数组长度是否符合预期
+                    if (shiftSchedule.length < 1) {
+                        alert("排班周期配置的 JSON 数组长度不能为0！");
+                        return false;
+                    }
+                    for (let i = 0; i < shiftSchedule.length; i++) {
+                        if (!Array.isArray(shiftSchedule[i])) {
+                            alert("排班周期配置的 JSON 数组元素必须是数组！");
+                            return false;
+                        }
+                        const oneDaySchedule = `${shiftSchedule[i]}`;
+                        let lastEndHour = 0, lastEndMinute = 0;
+                        for (let j = 0; j < shiftSchedule[i].length; j++) {
+                            if (typeof shiftSchedule[i][j] !== 'string') {
+                                alert("排班周期配置的 JSON 数组元素必须是字符串！" + oneDaySchedule);
+                                return false;
+                            }
+                            const [startHour, startMinute] = shiftSchedule[i][j].split('-')[0].split(':').map(Number);
+                            const [endHour, endMinute] = shiftSchedule[i][j].split('-')[1].split(':').map(Number);
+                            if (startHour > 24 || endHour > 24 || startMinute >= 60 || endMinute >= 60 || startHour < 0 || endHour < 0 || startMinute < 0 || endMinute < 0) {
+                                alert("时间格式无效！"+ oneDaySchedule);
+                                return false;
+                            }
+                            if (startHour > endHour || (startHour === endHour && startMinute > endMinute)) {
+                                alert("开始时间不能晚于结束时间！" + oneDaySchedule);
+                                return false;
+                            }
+                            if (j > 0 && (startHour < lastEndHour || (startHour === lastEndHour && startMinute <= lastEndMinute))) {
+                                alert("时间区间不能重叠！" + oneDaySchedule);
+                                return false;
+                            }
+                            lastEndHour = startHour;
+                            lastEndMinute = startMinute;
+                        }
+                    }
+                    // 保存到 localStorage
+                    if (saveOrNot) {
+                        localStorage.setItem('start-date', startDate);
+                        localStorage.setItem('shift-schedule-json', shiftScheduleJson);
+                    }
+                    return true;
+                } catch (e) {
+                    alert("排班周期配置的 JSON 格式无效！");
+                }
+            } else {
+                alert("排班起始日期和排班周期必须填写有效数据！");
+            }
+            return false;
+        }
+
+        // 生成排班
+        function generateSchedule(saveOrNot) {
+            // 保存配置到本地
+            if (!saveConfig(saveOrNot)) {
+                return;
+            }
+
+            const startDate = document.getElementById('start-date').value;
+            const month = document.getElementById('month').value;
+
+            if (!startDate) {
+                alert("请填写所有参数!");
+                return;
+            }
+
+            // 从 textarea 中获取编辑的 JSON 数据
+            let shiftScheduleData;
+            try {
+                shiftScheduleData = JSON.parse(document.getElementById('shift-schedule-json').value);
+            } catch (e) {
+                alert("JSON 格式错误!");
+                return;
+            }
+
+            const cycleDays = shiftScheduleData.length;
+
+            const start = new Date(startDate);
+            start.setHours(0, 0, 0, 0);
+            const selectedMonth = new Date(month + '-01'); // 选择的月份（1号）
+            const showYear = selectedMonth.getFullYear();
+            const showMonth = selectedMonth.getMonth();
+            const firstDay = new Date(showYear, showMonth, 1);
+            const lastDay = new Date(showYear, showMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+
+            const tableBody = document.getElementById('schedule-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';  // 清空表格
+
+            // 填充排班日期和工作时间表
+            for (let i = 1; i <= daysInMonth; i++) {
+                const date = new Date(showYear, showMonth, i);
+                const dayOfWeek = date.getDay(); // 星期几
+                const isWeekend = (dayOfWeek === 6 || dayOfWeek === 0); // 周六或周日
+                const isToday = (date.toDateString() === new Date().toDateString()); // 今天
+
+                const diffDays = Math.floor((date - start) / (1000 * 60 * 60 * 24));
+                const cycleIndex = (diffDays % cycleDays + cycleDays) % cycleDays;
+                // console.log(`start: ${start}, date: ${date}, diffDays: ${diffDays}, cycleIndex: ${cycleIndex}`);
+
+                const row = tableBody.insertRow();
+                row.classList.add('schedule-row'); // 应用 schedule-row 类
+
+                // 日期列
+                const dateCell = row.insertCell(0);
+                dateCell.textContent = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+                if (isWeekend) {
+                    dateCell.classList.add('weekend');
+                }
+                if (isToday) {
+                    dateCell.classList.add('today');
+                }
+
+                // 星期列
+                const weekdayCell = row.insertCell(1);
+                weekdayCell.textContent = ['日', '一', '二', '三', '四', '五', '六'][dayOfWeek];
+                if (isWeekend) {
+                    weekdayCell.classList.add('weekend');
+                }
+
+                // 工作时间列（图形化展示）
+                const workTimeCell = row.insertCell(2);
+                const workTime = shiftScheduleData[cycleIndex]; // 根据周期显示工作时间
+                workTimeCell.innerHTML = generateWorkTimeBars(workTime);
+            }
+        }
+
+        // 生成工作时间条形图
+        function generateWorkTimeBars(workTime) {
+            if (!workTime || workTime.length === 0) return '<span>休息</span>';
+
+            // 合并所有时间段并排序
+            const allTimes = [];
+
+            workTime.forEach(segment => {
+                const times = segment.split('-');
+                if (times.length === 2) {
+                    const start = parseTime(times[0]);
+                    const end = parseTime(times[1]);
+                    allTimes.push({ type: 'work', start, end });
+                }
+            });
+
+            // 计算休息时间
+            const allTimesSorted = allTimes.sort((a, b) => a.start - b.start); // 按时间顺序排序
+            let lastEndTime = 0;
+            let totalWorkTime = 0;
+            let bars = '';
+
+            // 遍历时间段，生成条形
+            allTimesSorted.forEach(time => {
+                if (lastEndTime < time.start) {
+                    const restDuration = time.start - lastEndTime;
+                    bars += generateBar(lastEndTime, restDuration, 'rest-time');
+                }
+                const workDuration = time.end - time.start;
+                bars += generateBar(time.start, workDuration, 'work-time');
+                lastEndTime = time.end;
+            });
+
+            // 检查最后的休息时间
+            const endOfDay = 24 * 60;
+            if (lastEndTime < endOfDay) {
+                const restDuration = endOfDay - lastEndTime;
+                bars += generateBar(lastEndTime, restDuration, 'rest-time');
+            }
+
+            return `<div class="time-bar-wrapper">${bars}${generateTimeLabels(allTimesSorted)}</div>`;
+        }
+
+        // 生成时间标签
+        function generateTimeLabels(times) {
+            const timeLabels = [];
+            times.forEach(time => {
+                const startLabel = formatTime(time.start);
+                const endLabel = formatTime(time.end);
+                const startPosition = (time.start / (24 * 60)) * 100;
+                const endPosition = (time.end / (24 * 60)) * 100;
+                timeLabels.push(`
+                    <div class="time-label time-label-start" style="left: ${startPosition}%">${startLabel}</div>
+                    <div class="time-label time-label-end" style="right: ${100 - endPosition}%">${endLabel}</div>
+                `);
+            });
+            return timeLabels.join('');
+        }
+
+        // 格式化时间为 "9:00" 或 "13:30"
+        function formatTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours}:${mins.toString().padStart(2, '0')}`;
+        }
+
+        // 生成时间条
+        function generateBar(startTime, duration, type) {
+            const width = (duration / (24 * 60)) * 100;
+            return `<div class="time-bar ${type}" style="width: ${width}%;"></div>`;
+        }
+
+        // 转换时间格式为分钟数（例如：9:00 -> 540分钟）
+        function parseTime(time) {
+            const [hour, minute] = time.split(':').map(t => parseInt(t));
+            return hour * 60 + minute;
+        }
+
+        // 初次加载时自动生成排班
+        window.onload = function() {
+            loadConfig();
+            generateSchedule(false);
+        }
+    </script>
+</body>
+</html>
