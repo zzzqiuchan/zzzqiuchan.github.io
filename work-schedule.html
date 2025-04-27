@@ -86,7 +86,7 @@
     <!-- 控制面板 -->
     <div class="controls">
         <label for="start-date">选择排班起始日期:</label>
-        <input type="date" id="start-date" value="2025-03-01">
+        <input type="date" id="start-date" value="2025-04-01">
         
         <label for="month">选择查看月份:</label>
         <input type="month" id="month" onchange="updateURL()">
@@ -99,7 +99,7 @@
     <textarea id="shift-schedule-json" class="json-editor">
 [
     ["8:00-12:00", "14:00-17:00"],
-    ["8:00-12:00", "13:00-17:00"],
+    ["8:00-11:00", "12:00-17:00"],
     ["17:00-22:00"],
     ["17:00-22:00"],
     ["3:00-8:00", "22:00-24:00"],
@@ -144,10 +144,10 @@
         document.getElementById('month').value = selectedDate;
 
         // 默认配置
-        const defaultStartDate = "2025-03-01";
+        const defaultStartDate = "2025-04-01";
         const defaultShiftSchedule = [
             ["8:00-12:00", "14:00-17:00"],
-            ["8:00-12:00", "13:00-17:00"],
+            ["8:00-11:00", "12:00-17:00"],
             ["17:00-22:00"],
             ["17:00-22:00"],
             ["3:00-8:00", "22:00-24:00"],
